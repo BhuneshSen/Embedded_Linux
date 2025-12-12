@@ -1,0 +1,36 @@
+------- Required Libraries ------
+<sys/ipc.h> - Defines IPC (Inter-Process Communication) keys and permissions.
+<sys/msg.h> - Provides message queue functions and structures.
+
+---------- Key APIs ---------- 
+msgget(key_t key, int msgflg) - Creates a new message queue or accesses an existing one. Returns a queue identifier (msgid).
+msgsnd(int msgid, const void *msgp, size_t msgsz, int msgflg) -	Sends a message to the queue.
+msgrcv(int msgid, void *msgp, size_t msgsz, long msgtyp, int msgflg) - Receives a message from the queue.
+msgctl(int msgid, int cmd, struct msqid_ds *buf) - Performs control operations (e.g., remove queue with IPC_RMID).
+
+---------- Structure ---------- 
+
+Structure: msg_buffer
+You define your own message structure. By convention:
+
+struct msg_buffer {
+    long msg_type;      // Message type (must be > 0)
+    char msg_text[100]; // Message data (payload)
+};
+msg_type: Used to categorize messages. For example, 1 for normal messages, 2 for priority messages.
+
+msg_text: The actual message content (string or binary data).
+
+---------- Compile ---------- 
+gcc sender.c -o sender
+gcc receiver.c -o receiver
+
+------------ Run ------------
+./sender
+./receiver
+
+Steps:
+Create/Access Queue - msgget()
+Send Message - msgsnd()
+Receive Message - msgrcv()
+Delete Queue - msgctl(..., IPC_RMID, ...)

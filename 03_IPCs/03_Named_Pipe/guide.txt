@@ -1,0 +1,15 @@
+What is a Named Pipe?
+A named pipe (FIFO) is a special file that allows communication between processes.
+Unlike anonymous pipes (pipe()), named pipes exist as files in the filesystem and can be used by unrelated processes.
+
+Data flows in first-in, first-out (FIFO) order.
+
+Create the FIFO (Syntax)
+mkfifo("myfifo", 0666);		//To creates a special file myfifo.
+
+Open the FIFO
+Writer process: open("myfifo", O_WRONLY);
+Reader process: open("myfifo", O_RDONLY);
+Writer uses write(fd, buffer, size);
+Reader uses read(fd, buffer, size);
+Always close(fd); after use.
