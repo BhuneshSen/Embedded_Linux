@@ -9,7 +9,6 @@ msgrcv(int msgid, void *msgp, size_t msgsz, long msgtyp, int msgflg) - Receives 
 msgctl(int msgid, int cmd, struct msqid_ds *buf) - Performs control operations (e.g., remove queue with IPC_RMID).
 
 ---------- Structure ---------- 
-
 Structure: msg_buffer
 You define your own message structure. By convention:
 
@@ -18,7 +17,6 @@ struct msg_buffer {
     char msg_text[100]; // Message data (payload)
 };
 msg_type: Used to categorize messages. For example, 1 for normal messages, 2 for priority messages.
-
 msg_text: The actual message content (string or binary data).
 
 ---------- Compile ---------- 
