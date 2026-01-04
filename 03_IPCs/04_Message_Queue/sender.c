@@ -1,23 +1,33 @@
-// Sender – sends a message into the queue.
-
 #include <stdio.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#include "msgqueue.h"
+#include <string.h>
+
+#define MAX 100
+
+struct msgbuf {
+    long mtype;
+    char mtext[MAX];
+};
 
 int main() {
-    struct msg_buffer message;
-    key_t key = MSG_KEY;
+    key_t key;
+    int msgid;
+    struct msgbuf msg;
+    
+    // Generate unique key
+    key = ftok("msgfile", 65);
 
     // Create message queue
-    int msgid = msgget(key, 0666 | IPC_CREAT);
+    msgid = msgget(key, 0666 | IPC_CREAT);
 
-    message.msg_type = 1;
-    sprintf(message.msg_text, "Hello from sender!");
+    msg.mtype = 1;   // message type
+    strcpy(msg.mtext, "Hello from Writer");
 
     // Send message
-    msgsnd(msgid, &message, sizeof(message.msg_text), 0);
+    msgsnd(msgid, &msg, sizeof(msg.mtext), 0);
 
-    printf("Message sent: %s\n", message.msg_text);
+    printf("Writer: Message sent\n");
+
     return 0;
 }
