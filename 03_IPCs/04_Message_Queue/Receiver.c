@@ -1,23 +1,28 @@
-// Receiver – reads the message from the queue.
-
 #include <stdio.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#include "msgqueue.h"
+
+#define MAX 100
+struct msgbuf {
+    long mtype;
+    char mtext[MAX];
+};
 
 int main() {
-    struct msg_buffer message;
-    key_t key = MSG_KEY;
+    key_t key;
+    int msgid;
+    struct msgbuf msg;
 
-    // Access message queue
-    int msgid = msgget(key, 0666 | IPC_CREAT);
+    key = ftok("msgfile", 65);           // Generate same key
 
-    // Receive message
-    msgrcv(msgid, &message, sizeof(message.msg_text), 1, 0);
 
-    printf("Message received: %s\n", message.msg_text);
+    msgid = msgget(key, 0666 | IPC_CREAT);    // Access message queue
 
-    // Destroy queue
+    msgrcv(msgid, &msg, sizeof(msg.mtext), 1, 0);    // Receive message of type 1
+
+    printf("Reader: Message received = %s\n", msg.mtext);
+
+    // Destroy the message queue
     msgctl(msgid, IPC_RMID, NULL);
 
     return 0;
