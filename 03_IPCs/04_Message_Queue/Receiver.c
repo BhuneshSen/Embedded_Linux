@@ -14,16 +14,12 @@ int main() {
     struct msgbuf msg;
 
     key = ftok("msgfile", 65);           // Generate same key
-
-
     msgid = msgget(key, 0666 | IPC_CREAT);    // Access message queue
-
     msgrcv(msgid, &msg, sizeof(msg.mtext), 1, 0);    // Receive message of type 1
-
+    
     printf("Reader: Message received = %s\n", msg.mtext);
 
-    // Destroy the message queue
-    msgctl(msgid, IPC_RMID, NULL);
+    msgctl(msgid, IPC_RMID, NULL);       // Destroy the message queue
 
     return 0;
 }
